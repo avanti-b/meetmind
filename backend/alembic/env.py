@@ -12,6 +12,7 @@ from app.core.database import Base
 
 # Import all models here so Alembic detects them for autogenerate
 from app.models.user import User  # noqa: F401
+from app.models.meeting import Meeting  # noqa: F401
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)

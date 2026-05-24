@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.routes import auth
+from app.api.routes import auth, meetings
 
 app = FastAPI(
     title=settings.app_name,
@@ -22,6 +22,7 @@ app.add_middleware(
 
 # ─── Routers ─────────────────────────────────────────────────────────────────
 app.include_router(auth.router, prefix="/api/v1")
+app.include_router(meetings.router, prefix="/api/v1")
 
 # ─── Health Check ─────────────────────────────────────────────────────────────
 @app.get("/health", tags=["System"])

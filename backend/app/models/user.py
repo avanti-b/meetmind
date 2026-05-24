@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
 
@@ -30,3 +30,8 @@ class User(Base):
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email}>"
+
+    # Relationships
+    meetings: Mapped[list["Meeting"]] = relationship(  # noqa: F821
+        "Meeting", back_populates="owner", cascade="all, delete-orphan"
+    )
