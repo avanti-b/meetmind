@@ -9,6 +9,7 @@ from app.schemas.meeting import (
     MeetingResponse,
     MeetingListResponse,
     MeetingDeleteResponse,
+    AnalysisResponse,
 )
 from app.services.meeting_service import MeetingService
 
@@ -83,3 +84,20 @@ async def upload_transcript(
     service = MeetingService(db)
     meeting = await service.upload_transcript(meeting_id, file, current_user)
     return MeetingResponse.model_validate(meeting)
+
+
+@router.post("/{meeting_id}/analyze", response_model=AnalysisResponse)
+def analyze_meeting(
+    meeting_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    service = MeetingService(db)
+    meeting = service.analyze_meeting(meeting_id, current_user)
+    return AnalysisResponse(
+        meeting_id=meeting.id,
+        summary=meeting.summary,
+        action_items=meeting.action_items,
+        decisions=meeting.decisions,
+        analyzed_at=meeting.analyzed_at,
+    )

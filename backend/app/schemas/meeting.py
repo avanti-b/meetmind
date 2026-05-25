@@ -42,6 +42,10 @@ class MeetingResponse(BaseModel):
     transcript: str | None
     original_filename: str | None
     status: MeetingStatus
+    summary: str | None
+    action_items: str | None
+    decisions: str | None
+    analyzed_at: datetime | None
     created_at: datetime
     updated_at: datetime
 
@@ -56,3 +60,15 @@ class MeetingListResponse(BaseModel):
 class MeetingDeleteResponse(BaseModel):
     message: str
     id: str
+
+
+# ─── AI Analysis Response ─────────────────────────────────────────────────────
+
+class AnalysisResponse(BaseModel):
+    meeting_id: str
+    summary: str
+    action_items: str
+    decisions: str
+    analyzed_at: datetime
+
+    model_config = {"from_attributes": True}

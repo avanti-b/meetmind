@@ -136,3 +136,45 @@ class MeetingService:
                 detail="Meeting not found",
             )
         return meeting
+
+    # ─── AI Analysis ──────────────────────────────────────────────────────────
+
+    def analyze_meeting(self, meeting_id: str, owner: "User") -> "Meeting":  # noqa: F821
+        """
+        Runs AI analysis on the meeting transcript.
+        Sets status to PROCESSING before the call and COMPLETED/FAILED after.
+        """
+        from app.services.ai_service import AIService
+        from app.models.meeting import MeetingStatus
+
+        meeting = self._get_owned_meeting(meeting_id, owner.id)
+
+        if not meeting.transcript:
+            from fastapi import HTTPException, status
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="No transcript found. Upload a transcript before analyzing.",
+            )
+
+        # Mark as processing so callers can show a loading state
+        meeting.status = MeetingStatus.PROCESSING
+        self.db.commit()
+
+        try:
+            ai_svc = AIService()
+            result = ai_svc.analyze_transcript(meeting.transcript)
+
+            meeting.summary = result["summary"]
+            meeting.action_items = result["action_items"]
+            meeting.decisions = result["decisions"]
+            meeting.analyzed_at = result["analyzed_at"]
+            meeting.status = MeetingStatus.COMPLETED
+
+        except Exception:
+            meeting.status = MeetingStatus.FAILED
+            self.db.commit()
+            raise
+
+        self.db.commit()
+        self.db.refresh(meeting)
+        return meeting

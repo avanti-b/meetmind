@@ -8,7 +8,7 @@ from app.core.database import Base
 
 class MeetingStatus(str, enum.Enum):
     UPLOADED = "uploaded"       # transcript received, not yet processed
-    PROCESSING = "processing"   # AI analysis in progress (Phase 2)
+    PROCESSING = "processing"   # AI analysis in progress
     COMPLETED = "completed"     # AI analysis done
     FAILED = "failed"           # processing error
 
@@ -28,6 +28,15 @@ class Meeting(Base):
     status: Mapped[MeetingStatus] = mapped_column(
         SAEnum(MeetingStatus), default=MeetingStatus.UPLOADED, nullable=False
     )
+
+    # ─── AI Analysis Fields ───────────────────────────────────────────────────
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    action_items: Mapped[str | None] = mapped_column(Text, nullable=True)
+    decisions: Mapped[str | None] = mapped_column(Text, nullable=True)
+    analyzed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),

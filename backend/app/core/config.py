@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     # Database
     database_url: str
 
-    # OpenAI
-    openai_api_key: str = ""
+    # GroqAPI
+    GROQ_API_KEY: str | None = None
 
     # CORS
     frontend_url: str = "http://localhost:5173"
