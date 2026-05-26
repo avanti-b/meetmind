@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black:    #0c0b0a;
+  --graphite: #1c1a18;
+  --carbon:   #252220;
+  --stone:    #2e2b28;
+  --ash:      #3d3935;
+  --mist:     #6b6560;
+  --silver:   #a8b0bc;
+  --cream:    #f5f0eb;
+  --white:    #faf8f5;
+  --ember:    #c4702a;
+  --ember-dim:#8a4d1c;
+  --ember-glow: rgba(196, 112, 42, 0.15);
+  --ember-pulse: rgba(196, 112, 42, 0.06);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 99px; }
+
+/* ── Selection ─────────────────────────────────── */
+::selection { background: rgba(196,112,42,0.2); color: var(--white); }
+
+/* ── Focus ──────────────────────────────────────── */
+:focus-visible { outline: 1px solid rgba(196,112,42,0.5); outline-offset: 3px; border-radius: 3px; }
+
+/* ── Type scale ─────────────────────────────────── */
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+.display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.display-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+.label-caps {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.mono { font-family: var(--font-mono); }
+
+/* ── Texture grain overlay ────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ── Ember shimmer ────────────────────────────── */
+@keyframes ember-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+@keyframes drift-y {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes slow-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes text-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes scan-line {
+  0% { top: -2px; }
+  100% { top: 100%; }
+}
+
+.ember-text {
+  background: linear-gradient(135deg, #e8a060, #c4702a, #8a4d1c, #c4702a, #e8a060);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 4s linear infinite;
+}
+
+.ember-glow { box-shadow: 0 0 32px rgba(196,112,42,0.2), 0 0 64px rgba(196,112,42,0.08); }
+
+/* ── Structural lines ────────────────────────── */
+.rule-h { height: 1px; background: linear-gradient(90deg, transparent, var(--ash), transparent); }
+.rule-v { width: 1px; background: linear-gradient(180deg, transparent, var(--ash), transparent); }
+
+/* ── Glass panel ─────────────────────────────── */
+.glass {
+  background: rgba(28,26,24,0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(61,57,53,0.6);
+}
+
+/* ── Intelligence node ───────────────────────── */
+.intel-node {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ember);
+  box-shadow: 0 0 8px var(--ember), 0 0 16px rgba(196,112,42,0.4);
+  animation: ember-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── Scan line effect ────────────────────────── */
+.scan-container {
+  position: relative;
+  overflow: hidden;
+}
+.scan-container::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196,112,42,0.3), transparent);
+  animation: scan-line 6s linear infinite;
+}
